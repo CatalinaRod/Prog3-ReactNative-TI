@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
-import { auth, db } from '../firebase/config'; // Asegúrate de importar db
+import { auth, db } from '../firebase/config'; 
 
 export default class Register extends Component {
     constructor(props) {
@@ -29,7 +29,7 @@ export default class Register extends Component {
                 this.props.navigation.navigate('Main'); 
                 this.setState({ email: "", password: "", userName: "" }); 
             })
-            .catch(error => this.setState({ error: error.message || "Fallo el registro" })); 
+            .catch(error => this.setState({ error: "Error al iniciar sesión. Intente nuevamente" })); 
     }
 
     render() {
