@@ -10,7 +10,7 @@ const Tab = createBottomTabNavigator();
 const HomeMenu = () => {
     return (
         <Tab.Navigator>
-            <Tab.Screen name="Home" component={Home} options={
+            <Tab.Screen name="Twitter" component={Home} options={
                 { tabBarIcon: () => <Entypo name="home" size={24} color="black" /> }
             } />
             <Tab.Screen name="NewPost" component={ NewPost } options={

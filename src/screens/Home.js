@@ -1,12 +1,34 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
-import { auth } from '../firebase/config';
-
+import { Text, View, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
+import { auth, db } from '../firebase/config';
+import Post from '../components/Post';
 
 
 export default class Home extends Component {
-  saludar() {
-    console.log('Me clickearon')
+  
+  constructor(){
+    super()
+    this.state={
+        posts:[],
+        loading:'true'
+    }
+  }
+
+  componentDidMount(){
+    db.collection('posts').onSnapshot(
+        docs => {
+           let post=[]
+           docs.forEach(doc => { post.push({
+                 id: doc.id,
+                 data: doc.data()
+              })
+           this.setState({
+              posts: post,
+              loading: false
+           })
+           });
+        }
+     )
   }
 
   handleLogOut = () => {
@@ -17,10 +39,11 @@ export default class Home extends Component {
   render() {
     return (
       <View>
-        <Text style={styles.second}>
-          Estás en la home
-        </Text>
-
+        <FlatList
+            data={this.state.posts}
+            keyExtractor={item => item.id.toString()}
+            renderItem={({item}) =><Post data={item.data}/>}
+        />
         {/* Pongo esto para salir y volver a entrar, hasta que ande el "remember me" */}
         <TouchableOpacity style={styles.button} onPress={() => this.handleLogOut()}>
           <Text style={styles.buttonText}>Desloguearse</Text>
