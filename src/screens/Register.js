@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
-import { auth } from '../firebase/config';
+import { auth, db } from '../firebase/config'; // Asegúrate de importar db
 
 export default class Register extends Component {
     constructor(props) {
@@ -17,8 +17,19 @@ export default class Register extends Component {
     handleSubmit() {
         console.log(this.state.email, this.state.password, this.state.userName);
         auth.createUserWithEmailAndPassword(this.state.email, this.state.password)
-            .then(response => this.setState({ registered: true }))
-            .catch(error => this.setState({ error: "Fallo el registro" }));
+            .then((response) => {
+                this.setState({ registered: true, error: "" });
+                return db.collection('users').add({
+                    email: this.state.email,
+                    userName: this.state.userName,
+                    createdAt: Date.now() 
+                });
+            })
+            .then(() => {
+                this.props.navigation.navigate('Main'); 
+                this.setState({ email: "", password: "", userName: "" }); 
+            })
+            .catch(error => this.setState({ error: error.message || "Fallo el registro" })); 
     }
 
     render() {
@@ -63,7 +74,6 @@ export default class Register extends Component {
                     </TouchableOpacity>
                 </View>
             </View>
-
         );
     }
 }
