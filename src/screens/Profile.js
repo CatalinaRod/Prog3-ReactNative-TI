@@ -66,22 +66,22 @@ export default class Profile extends Component {
     return (
       <View style={styles.container}>
         <Text style={styles.userName}>{this.state.usuarioLogueado}</Text>
-        <Text>{auth.currentUser.email}</Text>
-        <Text>Cantidad de posteos: {this.state.posts.length}</Text>
+        <Text style={styles.text}>{auth.currentUser.email}</Text>
+        <Text style={styles.text}>Cantidad de posteos: {this.state.posts.length}</Text>
         <FlatList
           data={this.state.posts}
           keyExtractor={item => item.id.toString()}
           renderItem={({ item }) => (
             item.data ? (
-              <Post
+              <Post style={styles.postContainer}
                 posts={item}
                 deletePost={() => this.deletePost(item.id)} 
               />
             ) : null 
           )}
         />
-        <TouchableOpacity onPress={() => this.handleLogOut()}>
-          <Text>Desloguearse</Text>
+        <TouchableOpacity onPress={() => this.handleLogOut()} style={styles.button}>
+          <Text style={styles.buttonText}>Desloguearse</Text>
         </TouchableOpacity>
       </View>
     );
@@ -89,15 +89,37 @@ export default class Profile extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: '#e1ecf7',
-  },
-  userName: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-});
-
-
+    container: {
+      flex: 1,
+      padding: 20,
+      backgroundColor: '#f0f8ff', 
+    },
+    userName: {
+      fontSize: 24,
+      fontWeight: 'bold',
+      marginBottom: 10,
+      marginTop: 10,
+      textAlign: 'center',
+    },
+    text: {
+      fontSize: 16,
+      marginBottom: 10,
+      textAlign: 'center'
+    },
+    button: {
+      paddingVertical: 12,
+      backgroundColor: '#71a5de', 
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderRadius: 8,
+      width: '60%',
+      alignSelf: 'center',
+      marginTop: 20,
+    },
+    buttonText: {
+      color: '#ffffff', 
+      fontWeight: '600',
+      fontSize: 16,
+      textAlign: 'center',
+    }
+  });
