@@ -28,7 +28,7 @@ export default class Login extends Component {
       .then(response => {
         this.props.navigation.navigate('HomeMenu');
       })
-      .catch(error => this.setState({ error: "Error al iniciar sesión. Intente nuevamente" }));
+      .catch(error => this.setState({ error: error.message }));
   }
 
   render() {
@@ -53,14 +53,14 @@ export default class Login extends Component {
           />
 
           <View style={styles.rememberContainer}>
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={() => this.setState({ rememberMe: !this.state.rememberMe })}
               style={styles.checkboxContainer}
             >
-              <Fontisto 
-                name={this.state.rememberMe ? 'checkbox-active' : 'checkbox-passive'} 
+              <Fontisto
+                name={this.state.rememberMe ? 'checkbox-active' : 'checkbox-passive'}
                 size={18}
-                color="black" 
+                color="black"
                 style={styles.checkboxIcon}
               />
               <Text style={styles.checkboxText}>Recordarme</Text>

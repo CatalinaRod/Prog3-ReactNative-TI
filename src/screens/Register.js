@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
-import { auth, db } from '../firebase/config'; 
+import { auth, db } from '../firebase/config';
 
 export default class Register extends Component {
     constructor(props) {
@@ -10,26 +10,33 @@ export default class Register extends Component {
             password: "",
             userName: "",
             registered: false,
-            error: ""
+            error: "",
         };
     }
 
+    componentDidMount() {
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                this.props.navigation.navigate("HomeMenu");
+            }
+        })
+    }
+
     handleSubmit() {
-        console.log(this.state.email, this.state.password, this.state.userName);
         auth.createUserWithEmailAndPassword(this.state.email, this.state.password)
             .then((response) => {
                 this.setState({ registered: true, error: "" });
                 return db.collection('users').add({
                     email: this.state.email,
                     userName: this.state.userName,
-                    createdAt: Date.now() 
+                    createdAt: Date.now()
                 });
             })
             .then(() => {
-                this.props.navigation.navigate('Main'); 
-                this.setState({ email: "", password: "", userName: "" }); 
+                this.props.navigation.navigate('HomeMenu');
+                this.setState({ email: "", password: "", userName: "" });
             })
-            .catch(error => this.setState({ error: "Error al iniciar sesión. Intente nuevamente" })); 
+            .catch(error => this.setState({ error: "Error al iniciar sesión. Intente nuevamente" }));
     }
 
     render() {

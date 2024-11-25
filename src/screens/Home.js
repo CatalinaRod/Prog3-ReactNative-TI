@@ -5,33 +5,34 @@ import Post from '../components/Post';
 
 
 export default class Home extends Component {
-  
-  constructor(){
+
+  constructor() {
     super()
-    this.state={
-        posts:[],
-        loading:'true'
+    this.state = {
+      posts: [],
+      loading: 'true'
     }
   }
 
-  componentDidMount(){
+  componentDidMount() {
     db.collection('posts').onSnapshot(
-        docs => {
-           let post=[]
-           docs.forEach(doc => { post.push({
-                 id: doc.id,
-                 data: doc.data()
-              })
-           this.setState({
-              posts: post,
-              loading: false
-           })
-           });
-        }
-     )
+      docs => {
+        let post = []
+        docs.forEach(doc => {
+          post.push({
+            id: doc.id,
+            data: doc.data()
+          })
+          this.setState({
+            posts: post,
+            loading: false
+          })
+        });
+      }
+    )
   }
 
-  handleLogOut = () => {
+  handleLogOut() {
     auth.signOut()
       .then(this.props.navigation.navigate('Login'))
   }
@@ -40,9 +41,9 @@ export default class Home extends Component {
     return (
       <View>
         <FlatList
-            data={this.state.posts}
-            keyExtractor={item => item.id.toString()}
-            renderItem={({item}) =><Post data={item.data}/>}
+          data={this.state.posts}
+          keyExtractor={item => item.id.toString()}
+          renderItem={({ item }) => <Post posts={item} />}
         />
         {/* Pongo esto para salir y volver a entrar, hasta que ande el "remember me" */}
         <TouchableOpacity style={styles.button} onPress={() => this.handleLogOut()}>
