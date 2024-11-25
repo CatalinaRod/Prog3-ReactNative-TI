@@ -66,7 +66,7 @@ export default class Post extends Component {
 
         db.collection('posts').doc(id).delete()
             .then(() => {
-                console.log('Post eliminado');
+                // console.log('Post eliminado');
             })
             .catch((error) => {
                 console.error('Error eliminando el post:', error);
@@ -75,7 +75,7 @@ export default class Post extends Component {
 
     render() {
         const { email, mensaje } = this.props.posts.data;
-        const isOwner = email === auth.currentUser.email; 
+        const isOwner = email === auth.currentUser.email;
 
         return (
             <View style={styles.contenedor}>

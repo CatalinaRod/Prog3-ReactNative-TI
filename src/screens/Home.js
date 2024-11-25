@@ -15,7 +15,7 @@ export default class Home extends Component {
   }
 
   componentDidMount() {
-    db.collection('posts').orderBy("createdAt","desc").onSnapshot(
+    db.collection('posts').orderBy("createdAt", "desc").onSnapshot(
       docs => {
         let post = []
         docs.forEach(doc => {

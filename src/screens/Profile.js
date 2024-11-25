@@ -14,7 +14,7 @@ export default class Profile extends Component {
 
   componentDidMount() {
     const userEmail = auth.currentUser.email;
-    
+
     db.collection('posts')
       .where('email', '==', userEmail)
       .onSnapshot(docs => {
@@ -52,9 +52,8 @@ export default class Profile extends Component {
       .doc(postId)
       .delete()
       .then(() => {
-        console.log("Post eliminado");
-        this.setState({ 
-          posts: this.state.posts.filter(post => post.id !== postId) 
+        this.setState({
+          posts: this.state.posts.filter(post => post.id !== postId)
         });
       })
       .catch(error => {
@@ -75,9 +74,9 @@ export default class Profile extends Component {
             item.data ? (
               <Post style={styles.postContainer}
                 posts={item}
-                deletePost={() => this.deletePost(item.id)} 
+                deletePost={() => this.deletePost(item.id)}
               />
-            ) : null 
+            ) : null
           )}
         />
         <TouchableOpacity onPress={() => this.handleLogOut()} style={styles.button}>
@@ -89,37 +88,37 @@ export default class Profile extends Component {
 }
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      padding: 20,
-      backgroundColor: '#f0f8ff', 
-    },
-    userName: {
-      fontSize: 24,
-      fontWeight: 'bold',
-      marginBottom: 10,
-      marginTop: 10,
-      textAlign: 'center',
-    },
-    text: {
-      fontSize: 16,
-      marginBottom: 10,
-      textAlign: 'center'
-    },
-    button: {
-      paddingVertical: 12,
-      backgroundColor: '#71a5de', 
-      justifyContent: 'center',
-      alignItems: 'center',
-      borderRadius: 8,
-      width: '60%',
-      alignSelf: 'center',
-      marginTop: 20,
-    },
-    buttonText: {
-      color: '#ffffff', 
-      fontWeight: '600',
-      fontSize: 16,
-      textAlign: 'center',
-    }
-  });
+  container: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: '#f0f8ff',
+  },
+  userName: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    marginTop: 10,
+    textAlign: 'center',
+  },
+  text: {
+    fontSize: 16,
+    marginBottom: 10,
+    textAlign: 'center'
+  },
+  button: {
+    paddingVertical: 12,
+    backgroundColor: '#71a5de',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 8,
+    width: '60%',
+    alignSelf: 'center',
+    marginTop: 20,
+  },
+  buttonText: {
+    color: '#ffffff',
+    fontWeight: '600',
+    fontSize: 16,
+    textAlign: 'center',
+  }
+});
