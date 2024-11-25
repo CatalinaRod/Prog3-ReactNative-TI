@@ -32,10 +32,6 @@ export default class Home extends Component {
     )
   }
 
-  handleLogOut() {
-    auth.signOut()
-      .then(this.props.navigation.navigate('Login'))
-  }
 
   render() {
     return (
@@ -45,10 +41,6 @@ export default class Home extends Component {
           keyExtractor={item => item.id.toString()}
           renderItem={({ item }) => <Post posts={item} />}
         />
-        {/* Pongo esto para salir y volver a entrar, hasta que ande el "remember me" */}
-        <TouchableOpacity style={styles.button} onPress={() => this.handleLogOut()}>
-          <Text style={styles.buttonText}>Desloguearse</Text>
-        </TouchableOpacity>
       </View>
     )
   }

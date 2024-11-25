@@ -7,6 +7,7 @@ import Search from '../screens/Search';
 import Entypo from '@expo/vector-icons/Entypo';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Feather from '@expo/vector-icons/Feather';
+import Profile from '../screens/Profile';
 
 
 const Tab = createBottomTabNavigator();
@@ -22,6 +23,9 @@ const HomeMenu = () => {
             } />
             <Tab.Screen name='Search' component={Search} options={{
                 tabBarIcon: () => <Feather name="search" size={24} color="black" />
+            }} />
+             <Tab.Screen name='Profile' component={Profile} options={{
+                tabBarIcon: () => <Feather name="user" size={24} color="black" />
             }} />
         </Tab.Navigator>
 
