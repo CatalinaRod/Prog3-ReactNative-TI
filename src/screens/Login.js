@@ -11,15 +11,17 @@ export default class Login extends Component {
       email: "",
       password: "",
       error: "",
-      rememberMe: false
+      login: false
     };
   }
 
   // Chequea si el usuario está logueado, y lo manda a la pantalla de Home
   componentDidMount() {
-    if (auth.currentUser) {
-      this.props.navigation.navigate("HomeMenu");
-    }
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        this.props.navigation.navigate("HomeMenu");
+      }
+    })
   }
 
   handleSubmit() {
@@ -28,7 +30,10 @@ export default class Login extends Component {
       .then(response => {
         this.props.navigation.navigate('HomeMenu');
       })
-      .catch(error => this.setState({ error: error.message }));
+      .catch(error => this.setState({
+        error: error.message,
+        login: true
+      }));
   }
 
   render() {
@@ -52,27 +57,12 @@ export default class Login extends Component {
             value={this.state.password}
           />
 
-          <View style={styles.rememberContainer}>
-            <TouchableOpacity
-              onPress={() => this.setState({ rememberMe: !this.state.rememberMe })}
-              style={styles.checkboxContainer}
-            >
-              <Fontisto
-                name={this.state.rememberMe ? 'checkbox-active' : 'checkbox-passive'}
-                size={18}
-                color="black"
-                style={styles.checkboxIcon}
-              />
-              <Text style={styles.checkboxText}>Recordarme</Text>
-            </TouchableOpacity>
-          </View>
-
           <TouchableOpacity onPress={() => this.handleSubmit()} style={styles.button}>
             <Text style={styles.buttonText}>Ingresar</Text>
           </TouchableOpacity>
 
           {/* Si hay algún error, se muestra en pantalla */}
-          {this.state.error ? <Text style={styles.error}>{this.state.error}</Text> : null}
+          {this.state.error.message ? <Text style={styles.error}>{this.state.error.message}</Text> : null}
 
           <Text style={styles.text}>¿No tienes una cuenta?</Text>
 
@@ -83,7 +73,7 @@ export default class Login extends Component {
             <Text style={styles.buttonText}>Registrarse</Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </View >
     );
   }
 }
