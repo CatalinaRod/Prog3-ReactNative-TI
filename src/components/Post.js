@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
-import { auth, db } from '../firebase/config'
-import firebase from "firebase";
+import { auth, db } from '../firebase/config';
+import firebase from 'firebase';
 
-// Iconos para los likes
 import AntDesign from '@expo/vector-icons/AntDesign';
-
 
 export default class Post extends Component {
 
@@ -63,17 +61,28 @@ export default class Post extends Component {
         }
     }
 
+    handleDeletePost = () => {
+        const { id } = this.props.posts;
+
+        db.collection('posts').doc(id).delete()
+            .then(() => {
+                console.log('Post eliminado');
+            })
+            .catch((error) => {
+                console.error('Error eliminando el post:', error);
+            });
+    }
+
     render() {
+        const { email, mensaje } = this.props.posts.data;
+        const isOwner = email === auth.currentUser.email; 
+
         return (
             <View style={styles.contenedor}>
-
-                {/* Usuario y contenido de la publicación*/}
-                <Text style={styles.email}>{this.props.posts.data.email} </Text>
-                <Text style={styles.mensaje}>{this.props.posts.data.mensaje}</Text>
-
+                <Text style={styles.email}>{email}</Text>
+                <Text style={styles.mensaje}>{mensaje}</Text>
 
                 <View style={styles.contenedorLike}>
-
                     <TouchableOpacity style={styles.botonLike} onPress={() => this.handleLike()} >
                         <AntDesign
                             name={this.state.liked ? "like1" : "like2"}
@@ -83,6 +92,11 @@ export default class Post extends Component {
                     </TouchableOpacity>
                     <Text style={styles.cantLikes}>{this.state.cantLikes} Likes</Text>
                 </View>
+                {isOwner && (
+                    <TouchableOpacity style={styles.deleteButton} onPress={this.handleDeletePost}>
+                        <Text style={styles.deleteButtonText}>Eliminar</Text>
+                    </TouchableOpacity>
+                )}
             </View>
         );
     }
@@ -119,5 +133,17 @@ const styles = StyleSheet.create({
     cantLikes: {
         fontSize: 14,
         color: "#303841",
-    }
+    },
+    deleteButton: {
+        marginTop: 10,
+        backgroundColor: '#e74c3c',
+        padding: 5,
+        borderRadius: 5,
+    },
+    deleteButtonText: {
+        color: '#fff',
+        textAlign: 'center',
+        fontWeight: 'bold',
+    },
 });
+
