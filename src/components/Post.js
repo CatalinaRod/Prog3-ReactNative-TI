@@ -93,8 +93,8 @@ export default class Post extends Component {
                     <Text style={styles.cantLikes}>{this.state.cantLikes} Likes</Text>
                 </View>
                 {isOwner && (
-                    <TouchableOpacity style={styles.deleteButton} onPress={this.handleDeletePost}>
-                        <Text style={styles.deleteButtonText}>Eliminar</Text>
+                    <TouchableOpacity style={styles.button} onPress={this.handleDeletePost}>
+                        <Text style={styles.buttonText}>Eliminar</Text>
                     </TouchableOpacity>
                 )}
             </View>
@@ -143,6 +143,17 @@ const styles = StyleSheet.create({
     deleteButtonText: {
         color: '#fff',
         textAlign: 'center',
+        fontWeight: 'bold',
+    },
+    button: {
+        backgroundColor: '#007BFF',
+        padding: 5,
+        borderRadius: 5,
+        marginTop: 10,
+        marginBottom: 5,
+    },
+    buttonText: {
+        color: '#FFFFFF',
         fontWeight: 'bold',
     },
 });
