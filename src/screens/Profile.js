@@ -13,34 +13,33 @@ export default class Profile extends Component {
   }
 
   componentDidMount() {
+    const userEmail = auth.currentUser.email;
+    
     db.collection('posts')
-      .where('email', '==', auth.currentUser.email)
+      .where('email', '==', userEmail)
       .onSnapshot(docs => {
-        let post = [];
+        let posts = [];
         docs.forEach(doc => {
-          post.push({
+          const postData = doc.data();
+          posts.push({
             id: doc.id,
-            data: doc.data()
+            data: postData,
           });
         });
-        this.setState({
-          posts: post,
-        });
+        this.setState({ posts });
       });
 
     db.collection('users')
-      .where('email', '==', auth.currentUser.email)
+      .where('email', '==', userEmail)
       .onSnapshot(docs => {
-        let usuarioLogueado = [];
+        let usuarioLogueado = null;
         docs.forEach(doc => {
-          usuarioLogueado.push({
-            id: doc.id,
-            data: doc.data()
-          });
+          const userData = doc.data();
+          if (userData) {
+            usuarioLogueado = userData.userName;
+          }
         });
-        this.setState({
-          usuarioLogueado: usuarioLogueado[0].data.userName,
-        });
+        this.setState({ usuarioLogueado: usuarioLogueado || 'Usuario' });
       });
   }
 
@@ -54,8 +53,8 @@ export default class Profile extends Component {
       .delete()
       .then(() => {
         console.log("Post eliminado");
-        this.setState({
-          posts: this.state.posts.filter(post => post.id !== postId)
+        this.setState({ 
+          posts: this.state.posts.filter(post => post.id !== postId) 
         });
       })
       .catch(error => {
@@ -65,18 +64,20 @@ export default class Profile extends Component {
 
   render() {
     return (
-      <View>
-        <Text>{this.state.usuarioLogueado}</Text>
+      <View style={styles.container}>
+        <Text style={styles.userName}>{this.state.usuarioLogueado}</Text>
         <Text>{auth.currentUser.email}</Text>
         <Text>Cantidad de posteos: {this.state.posts.length}</Text>
         <FlatList
           data={this.state.posts}
           keyExtractor={item => item.id.toString()}
           renderItem={({ item }) => (
-            <Post
-              post={item}
-              deletePost={() => this.deletePost(item.id)} 
-            />
+            item.data ? (
+              <Post
+                posts={item}
+                deletePost={() => this.deletePost(item.id)} 
+              />
+            ) : null 
           )}
         />
         <TouchableOpacity onPress={() => this.handleLogOut()}>
@@ -86,3 +87,17 @@ export default class Profile extends Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: '#e1ecf7',
+  },
+  userName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+});
+
+

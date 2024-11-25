@@ -66,7 +66,7 @@ export default class Register extends Component {
                         value={this.state.userName}
                         style={styles.input}
                     />
-                    <TouchableOpacity onPress={() => this.handleSubmit()} style={styles.button}>
+                    <TouchableOpacity onPress={() => this.handleSubmit()} style={styles.button} disabled={!this.state.email || !this.state.password || !this.state.userName}>
                         <Text style={styles.buttonText}>Registrar</Text>
                     </TouchableOpacity>
 
