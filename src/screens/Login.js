@@ -15,7 +15,7 @@ export default class Login extends Component {
     };
   }
 
-  // Chequea si el usuario está logueado, y lo manda a la pantalla de Home
+  // Chequea si el usuario está logueado, de ser así, y lo manda a la pantalla de Home
   componentDidMount() {
     auth.onAuthStateChanged((user) => {
       if (user) {
@@ -24,17 +24,56 @@ export default class Login extends Component {
     })
   }
 
-  handleSubmit() {
-    auth
-      .signInWithEmailAndPassword(this.state.email, this.state.password)
-      .then(response => {
-        this.props.navigation.navigate('HomeMenu');
-      })
-      .catch(error => this.setState({
-        error: error.message,
-        login: true
-      }));
+  validateEmail() {
+    if (this.state.email === "") {
+      this.setState({ error: "El campo email no puede estar vacío." });
+      return false;
+
+    } else if (!this.state.email.includes("@")) {
+      this.setState({ error: "El email no tiene el formato correcto." });
+      return false;
+
+    } else {
+      this.setState({ error: "" });
+      return true;
+    }
   }
+
+  validatePassword() {
+    if (this.state.password === "") {
+      this.setState({
+        error: "La contraseña no puede estar vacía",
+      })
+      return false;
+
+    } else if (this.state.password.length < 6) {
+      this.setState({
+        error: "La contraseña debe tener más de 6 dígitos."
+      })
+      return false;
+
+    } else {
+      this.setState({ error: "" });
+      return true;
+    }
+  }
+
+  handleSubmit() {
+
+    if (this.validateEmail() && this.validatePassword()) {
+      auth.signInWithEmailAndPassword(this.state.email, this.state.password)
+        .then((response) => {
+          this.setState({
+            login: true,
+            error: ""
+          })
+
+          this.props.navigation.navigate("HomeMenu");
+        })
+        .catch(error => this.setState({ error: "Error al iniciar sesión. Intente nuevamente." }));
+    }
+  }
+
 
   render() {
     return (
@@ -61,10 +100,8 @@ export default class Login extends Component {
             <Text style={styles.buttonText}>Ingresar</Text>
           </TouchableOpacity>
 
-          {/* Si hay algún error, se muestra en pantalla */}
-          {this.state.error.message ? <Text style={styles.error}>{this.state.error.message}</Text> : null}
 
-          <Text style={styles.text}>¿No tienes una cuenta?</Text>
+          {this.state.error ? <Text style={styles.error}>{this.state.error}</Text> : null}
 
           <TouchableOpacity
             onPress={() => this.props.navigation.navigate("Register")}
@@ -127,23 +164,5 @@ const styles = StyleSheet.create({
   },
   text: {
     marginTop: 20,
-  },
-  rememberContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 15,
-    width: '80%'
-  },
-  checkboxContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  checkboxIcon: {
-    alignSelf: 'center'
-  },
-  checkboxText: {
-    marginLeft: 8,
-    alignSelf: 'center'
   }
 });

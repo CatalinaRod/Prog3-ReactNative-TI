@@ -10,7 +10,7 @@ export default class UsersSearch extends Component {
         this.state = {
             usuarios: [],
             textoSearch: '',
-            mostrarNoResultados: false
+            busquedaRealizada: false
         }
     }
 
@@ -18,27 +18,23 @@ export default class UsersSearch extends Component {
         if (this.state.textoSearch.length > 0) {
             db.collection('users')
                 .onSnapshot(docs => {
-
                     let usuarios = [];
-
                     docs.forEach(doc => {
                         usuarios.push({
                             id: doc.id,
                             data: doc.data()
                         })
                     });
-
                     this.setState({
                         usuarios: usuarios,
-                        mostrarNoResultados: false
+                        busquedaRealizada: true
                     });
-                    if (usuarios.length == 0) {
-                        this.setState({ mostrarNoResultados: true })
-                    }
                 })
-
         } else {
-            this.setState({ mostrarNoResultados: false, usuarios: [] })
+            this.setState({
+                usuarios: [],
+                busquedaRealizada: true
+            })
         }
     }
 
@@ -62,17 +58,19 @@ export default class UsersSearch extends Component {
                     </TouchableOpacity>
                 </View>
 
-                {usuariosFiltrados.length > 0 ? (
-                    <FlatList
-                        data={usuariosFiltrados}
-                        keyExtractor={(item) => item.id.toString()}
-                        renderItem={({ item }) => (
-                            <Text style={styles.userNameText}>@{item.data.userName}</Text>
-                        )}
-                    />
-                ) : this.state.mostrarNoResultados ? (
-                    <Text style={styles.noResults}>No se encontraron resultados</Text>
-                ) : null}
+                {this.state.busquedaRealizada && (
+                    usuariosFiltrados.length === 0 ? (
+                        <Text style={styles.noResults}>No se encontraron resultados</Text>
+                    ) : (
+                        <FlatList
+                            data={usuariosFiltrados}
+                            keyExtractor={(item) => item.id.toString()}
+                            renderItem={({ item }) => (
+                                <Text style={styles.userNameText}>@{item.data.userName}</Text>
+                            )}
+                        />
+                    )
+                )}
             </View>
         )
     }
@@ -122,12 +120,6 @@ const styles = StyleSheet.create({
         color: '#666',
         marginTop: 20,
     },
-    // userContainer: {
-    //     backgroundColor: '#fff',
-    //     padding: 10,
-    //     marginBottom: 10,
-    //     borderRadius: 8,
-    // },
     button: {
         backgroundColor: '#28a745',
         paddingVertical: 10,
@@ -135,11 +127,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 4,
-        marginTop: 20,
-        shadowColor: '#28a745cc',
-        shadowOffset: { width: 0, height: 3 },
-        shadowOpacity: 0.5,
-        shadowRadius: 4,
+        marginTop: 20
     },
     buttonText: {
         color: '#fff',
