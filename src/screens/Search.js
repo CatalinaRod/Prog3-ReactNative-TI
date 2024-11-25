@@ -81,7 +81,7 @@ export default class UsersSearch extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#f2f2f2',
+        backgroundColor: '#e1ecf7',
         padding: 20,
     },
     searchContainer: {

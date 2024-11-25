@@ -15,7 +15,7 @@ export default class Home extends Component {
   }
 
   componentDidMount() {
-    db.collection('posts').onSnapshot(
+    db.collection('posts').orderBy("createdAt","desc").onSnapshot(
       docs => {
         let post = []
         docs.forEach(doc => {
@@ -39,7 +39,7 @@ export default class Home extends Component {
 
   render() {
     return (
-      <View>
+      <View style={styles.container} >
         <FlatList
           data={this.state.posts}
           keyExtractor={item => item.id.toString()}
@@ -55,6 +55,11 @@ export default class Home extends Component {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#e1ecf7',
+    padding: 10,
+  },
   second: {
     flex: 2,
     fontSize: 15,

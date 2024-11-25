@@ -3,8 +3,8 @@ import { View, Text, StyleSheet, TouchableOpacity, TextInput } from 'react-nativ
 import { auth, db } from '../firebase/config'
 
 export default class NewPost extends Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
     this.state = {
       post: [],
       error: '',
@@ -12,13 +12,6 @@ export default class NewPost extends Component {
     }
   }
 
-  componentDidMount() {
-    auth.onAuthStateChanged(user => {
-      if (!user) {
-        this.props.navigation.navigate('Login')
-      }
-    })
-  }
 
   handlePost() {
     db.collection('posts').add({
@@ -28,7 +21,7 @@ export default class NewPost extends Component {
       likes: []
     })
       .then(() => {
-        this.props.navigation.navigate('Home')
+        this.props.navigation.navigate('Twitter')
       })
       .catch(error => {
         if (this.state.errorMessage != '') {
@@ -57,7 +50,7 @@ export default class NewPost extends Component {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#e1ecf7',
     justifyContent: 'center',
     alignItems: 'center',
     padding: 10,
