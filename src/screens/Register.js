@@ -88,7 +88,7 @@ export default class Register extends Component {
 const styles = StyleSheet.create({
     mainContainer: {
         flex: 1,
-        backgroundColor: '#F5F5F5',
+        backgroundColor: '#e1ecf7',
         justifyContent: 'center',
         padding: 20,
     },
