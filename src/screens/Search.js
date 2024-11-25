@@ -8,7 +8,7 @@ export default class UsersSearch extends Component {
     constructor() {
         super();
         this.state = {
-            usuariosFiltrados: [],
+            usuarios: [],
             textoSearch: '',
             mostrarNoResultados: false
         }
@@ -17,33 +17,37 @@ export default class UsersSearch extends Component {
     handleSearch() {
         if (this.state.textoSearch.length > 0) {
             db.collection('users')
-                .where('userName', '==', this.state.textoSearch)
                 .onSnapshot(docs => {
-                    console.log(docs);
-                    let usuariosFiltrados = [];
+
+                    let usuarios = [];
+
                     docs.forEach(doc => {
-                        usuariosFiltrados.push({
+                        usuarios.push({
                             id: doc.id,
                             data: doc.data()
                         })
                     });
 
                     this.setState({
-                        usuariosFiltrados: usuariosFiltrados,
+                        usuarios: usuarios,
                         mostrarNoResultados: false
                     });
-                    if (usuariosFiltrados.length == 0) {
+                    if (usuarios.length == 0) {
                         this.setState({ mostrarNoResultados: true })
                     }
-                    console.log(usuariosFiltrados);
                 })
 
         } else {
-            this.setState({ mostrarNoResultados: false, usuariosFiltrados: [] })
+            this.setState({ mostrarNoResultados: false, usuarios: [] })
         }
     }
 
     render() {
+
+        const usuariosFiltrados = this.state.usuarios.filter(user =>
+            user.data.userName.toLowerCase().includes(this.state.textoSearch.toLowerCase())
+        )
+
         return (
             <View style={styles.container}>
                 <View style={styles.searchContainer}>
@@ -58,9 +62,9 @@ export default class UsersSearch extends Component {
                     </TouchableOpacity>
                 </View>
 
-                {this.state.usuariosFiltrados.length > 0 ? (
+                {usuariosFiltrados.length > 0 ? (
                     <FlatList
-                        data={this.state.usuariosFiltrados}
+                        data={usuariosFiltrados}
                         keyExtractor={(item) => item.id.toString()}
                         renderItem={({ item }) => (
                             <Text style={styles.userNameText}>@{item.data.userName}</Text>
